@@ -22,8 +22,11 @@ public class FileStorageService {
         this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
+            Path testFile = this.fileStorageLocation.resolve(".write_test");
+            Files.write(testFile, "test".getBytes());
+            Files.delete(testFile);
         } catch (Exception ex) {
-            throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
+            throw new IllegalStateException("Upload directory " + this.fileStorageLocation + " is not writable or could not be created. Please check volume permissions (e.g., RAILWAY_RUN_UID).", ex);
         }
     }
 
