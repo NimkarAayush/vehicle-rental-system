@@ -19,6 +19,17 @@ public class SecurityAccessTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private com.vehiclerental.service.UserService userService;
+
+    @org.junit.jupiter.api.BeforeEach
+    public void setup() {
+        com.vehiclerental.entity.User mockUser = new com.vehiclerental.entity.User();
+        mockUser.setFirstName("Test");
+        mockUser.setLastName("User");
+        org.mockito.Mockito.when(userService.findByEmail(org.mockito.ArgumentMatchers.anyString())).thenReturn(mockUser);
+    }
+
     @Test
     public void testPublicPages_AreAccessible() throws Exception {
         mockMvc.perform(get("/")).andExpect(status().isOk());
@@ -47,3 +58,4 @@ public class SecurityAccessTests {
                .andExpect(status().isOk());
     }
 }
+
