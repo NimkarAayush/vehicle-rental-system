@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>Access Denied</title>
+    <title>403 Access Denied</title>
 </head>
 <body>
-    <div layout:fragment="content" class="text-center py-5">
-        <h1 class="display-1 text-danger fw-bold"><i class="fa-solid fa-ban"></i></h1>
-        <h2 class="display-4 fw-bold mt-3">403</h2>
-        <h3 class="mb-4">Access Denied</h3>
-        <p class="lead text-muted mb-5">You do not have permission to view this page.</p>
-        <a th:href="@{/}" class="btn btn-primary px-4 py-2">Return Home</a>
+    <div layout:fragment="content" class="d-flex align-items-center justify-content-center py-5">
+        <div class="container text-center" data-aos="zoom-in">
+            <div class="mb-4 text-accent">
+                <i class="fa-solid fa-ban" style="font-size: 100px; filter: drop-shadow(0 10px 15px rgba(244,63,94,0.3));"></i>
+            </div>
+            <h1 class="display-1 fw-bold text-dark">403</h1>
+            <h2 class="h3 mb-4 fw-bold">Access Denied</h2>
+            <p class="text-muted lead mb-5 mx-auto" style="max-width: 500px;">Oops! You don't have permission to access this page. Please ensure you're logged in with the correct account type.</p>
+            <a th:href="@{/}" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold hover-lift shadow-sm">
+                <i class="fa-solid fa-house me-2"></i> Return Home
+            </a>
+        </div>
     </div>
 </body>
 </html>

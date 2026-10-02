@@ -3,42 +3,52 @@
 <head>
     <title th:text="${vehicle.brand + ' ' + vehicle.model + ' - RideEasy'}">Vehicle Details</title>
 </head>
-<body>
-    <div layout:fragment="content">
-        <div class="mb-4">
-            <a th:href="@{/vehicles}" class="text-decoration-none text-muted"><i class="fa-solid fa-arrow-left me-1"></i> Back to Fleet</a>
-        </div>
-        
-        <div class="card shadow-sm border-0 overflow-hidden">
-            <div class="row g-0">
-                <div class="col-md-7">
-                    <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://via.placeholder.com/800x500?text=No+Image'}" class="img-fluid h-100 w-100" style="object-fit: cover; min-height: 400px;" th:alt="${vehicle.brand + ' ' + vehicle.model}">
-                </div>
-                <div class="col-md-5 d-flex flex-column">
-                    <div class="card-body p-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-primary fs-6" th:text="${vehicle.type}"></span>
-                            <span class="badge bg-success" th:if="${vehicle.status.name() == 'AVAILABLE'}"><i class="fa-solid fa-check-circle me-1"></i> Available Now</span>
-                            <span class="badge bg-secondary" th:unless="${vehicle.status.name() == 'AVAILABLE'}">Not Available</span>
+<body class="bg-light">
+    <div layout:fragment="content" class="py-5">
+        <div class="container">
+            <div class="mb-4" data-aos="fade-right">
+                <a th:href="@{/vehicles}" class="text-decoration-none text-muted hover-primary fw-bold"><i class="fa-solid fa-arrow-left me-2"></i> Back to Fleet</a>
+            </div>
+            
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden" data-aos="fade-up">
+                <div class="row g-0">
+                    <div class="col-lg-7 position-relative">
+                        <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1200&auto=format&fit=crop'}" 
+                             class="img-fluid h-100 w-100" style="object-fit: cover; min-height: 500px;" th:alt="${vehicle.brand + ' ' + vehicle.model}">
+                        <div class="position-absolute top-0 end-0 m-4">
+                            <span class="badge bg-success shadow fs-6 p-2 rounded-pill px-3" th:if="${vehicle.status.name() == 'AVAILABLE'}"><i class="fa-solid fa-check-circle me-1"></i> Available Now</span>
+                            <span class="badge bg-secondary shadow fs-6 p-2 rounded-pill px-3" th:unless="${vehicle.status.name() == 'AVAILABLE'}"><i class="fa-solid fa-clock me-1"></i> Not Available</span>
                         </div>
-                        
-                        <h1 class="card-title fw-bold display-6 mb-1" th:text="${vehicle.brand + ' ' + vehicle.model}"></h1>
-                        <p class="text-muted mb-4"><i class="fa-solid fa-hashtag me-1"></i> Reg: <span th:text="${vehicle.registrationNumber}"></span></p>
-                        
-                        <div class="bg-light p-4 rounded mb-4">
-                            <h2 class="text-success fw-bold mb-0">
-                                $<span th:text="${vehicle.pricePerDay}"></span> <span class="fs-5 text-muted fw-normal">/ day</span>
-                            </h2>
-                        </div>
-                        
-                        <p class="lead">Experience the comfort and reliability of the <span th:text="${vehicle.brand + ' ' + vehicle.model}"></span>. Perfect for your next trip, combining style, performance, and fuel efficiency.</p>
-                        
-                        <div class="mt-auto pt-4 border-top">
-                            <button class="btn btn-primary btn-lg w-100 fw-bold" th:disabled="${vehicle.status.name() != 'AVAILABLE'}">
-                                <i class="fa-solid fa-calendar-check me-2"></i> Book This Vehicle
-                            </button>
-                            <div class="text-center mt-2 small text-muted" th:if="${vehicle.status.name() != 'AVAILABLE'}">
-                                This vehicle is currently not available for booking.
+                    </div>
+                    <div class="col-lg-5 d-flex flex-column bg-white">
+                        <div class="card-body p-4 p-xl-5 d-flex flex-column h-100">
+                            
+                            <span class="badge bg-primary-subtle text-primary fw-bold rounded-pill px-3 py-2 align-self-start mb-3" th:text="${vehicle.type}"></span>
+                            
+                            <h1 class="card-title fw-bold display-5 mb-1" th:text="${vehicle.brand + ' ' + vehicle.model}"></h1>
+                            <p class="text-muted mb-4 fs-5"><i class="fa-solid fa-fingerprint me-2 text-primary"></i> <span th:text="${vehicle.registrationNumber}"></span></p>
+                            
+                            <div class="bg-light p-4 rounded-4 mb-4 border border-light shadow-sm">
+                                <p class="text-muted small fw-bold text-uppercase tracking-wide mb-1">Rental Price</p>
+                                <h2 class="text-accent fw-bold mb-0 display-4">
+                                    $<span th:text="${vehicle.pricePerDay}"></span> <span class="fs-5 text-muted fw-normal">/ day</span>
+                                </h2>
+                            </div>
+                            
+                            <h5 class="fw-bold mb-3">Vehicle Overview</h5>
+                            <p class="text-muted lh-lg mb-4">Experience the comfort, reliability, and superior performance of the <span th:text="${vehicle.brand + ' ' + vehicle.model}"></span>. Perfectly maintained and ready for your next adventure. Includes basic insurance and 24/7 roadside assistance.</p>
+                            
+                            <div class="row g-3 mb-5 text-muted small fw-medium">
+                                <div class="col-6 d-flex align-items-center"><i class="fa-solid fa-gas-pump fa-fw me-2 text-primary"></i> Automatic Transmission</div>
+                                <div class="col-6 d-flex align-items-center"><i class="fa-solid fa-users fa-fw me-2 text-primary"></i> 5 Seats</div>
+                                <div class="col-6 d-flex align-items-center"><i class="fa-solid fa-suitcase fa-fw me-2 text-primary"></i> 2 Large Bags</div>
+                                <div class="col-6 d-flex align-items-center"><i class="fa-solid fa-snowflake fa-fw me-2 text-primary"></i> Air Conditioning</div>
+                            </div>
+                            
+                            <div class="mt-auto">
+                                <button class="btn btn-primary btn-lg w-100 fw-bold rounded-pill shadow-sm hover-lift" th:disabled="${vehicle.status.name() != 'AVAILABLE'}">
+                                    <i class="fa-solid fa-calendar-check me-2"></i> Proceed to Booking
+                                </button>
                             </div>
                         </div>
                     </div>

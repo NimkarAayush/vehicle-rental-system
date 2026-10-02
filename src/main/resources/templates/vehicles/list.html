@@ -3,112 +3,133 @@
 <head>
     <title>Browse Vehicles - RideEasy</title>
 </head>
-<body>
-    <div layout:fragment="content">
-        <div class="row mb-4 pb-3 border-bottom">
-            <div class="col-12">
-                <h1 class="display-5 fw-bold">Our Fleet</h1>
-                <p class="lead text-muted">Browse and filter to find the perfect vehicle for your journey.</p>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- Sidebar Filters -->
-            <div class="col-lg-3 mb-4">
-                <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
-                    <div class="card-header bg-white fw-bold py-3">
-                        <i class="fa-solid fa-filter me-2"></i> Filters
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/vehicles}" method="get">
-                            
-                            <div class="mb-4">
-                                <label class="form-label fw-bold small">Vehicle Type</label>
-                                <select name="type" class="form-select">
-                                    <option value="">All Types</option>
-                                    <option th:each="t : ${types}" th:value="${t}" th:text="${t}" th:selected="${t == typeFilter}"></option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label fw-bold small">Brand</label>
-                                <input type="text" name="brand" th:value="${brandFilter}" class="form-control" placeholder="e.g. Toyota">
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label fw-bold small">Price Range ($/day)</label>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <input type="number" name="minPrice" th:value="${minPriceFilter}" class="form-control" placeholder="Min">
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="number" name="maxPrice" th:value="${maxPriceFilter}" class="form-control" placeholder="Max">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-bold small">Sort By</label>
-                                <select name="sortField" class="form-select mb-2">
-                                    <option value="pricePerDay" th:selected="${sortField == 'pricePerDay'}">Price</option>
-                                    <option value="brand" th:selected="${sortField == 'brand'}">Brand</option>
-                                </select>
-                                <select name="sortDir" class="form-select">
-                                    <option value="asc" th:selected="${sortDir == 'asc'}">Ascending</option>
-                                    <option value="desc" th:selected="${sortDir == 'desc'}">Descending</option>
-                                </select>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100 fw-bold">Apply Filters</button>
-                            <a th:href="@{/vehicles}" class="btn btn-outline-secondary w-100 mt-2">Clear</a>
-                        </form>
-                    </div>
+<body class="bg-light">
+    <div layout:fragment="content" class="py-5">
+        <div class="container">
+            <div class="row mb-5 align-items-center" data-aos="fade-down">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-2">Our Premium Fleet</h1>
+                    <p class="lead text-muted mb-0">Browse and filter to find the perfect vehicle for your journey.</p>
                 </div>
             </div>
 
-            <!-- Vehicle Grid -->
-            <div class="col-lg-9">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-                    <div class="col" th:each="vehicle : ${vehiclePage.content}">
-                        <div class="card h-100 shadow-sm border-0">
-                            <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://via.placeholder.com/800x500?text=No+Image'}" class="card-img-top vehicle-img" th:alt="${vehicle.brand + ' ' + vehicle.model}">
-                            <div class="card-body d-flex flex-column">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title fw-bold mb-0" th:text="${vehicle.brand + ' ' + vehicle.model}"></h5>
-                                    <span class="badge bg-primary" th:text="${vehicle.type}"></span>
-                                </div>
-                                <h4 class="text-success mb-4 fw-bold">
-                                    $<span th:text="${vehicle.pricePerDay}"></span> <small class="text-muted fs-6 fw-normal">/ day</small>
-                                </h4>
-                                <a th:href="@{/vehicles/{id}(id=${vehicle.id})}" class="btn btn-outline-primary w-100 mt-auto">View Details</a>
-                            </div>
+            <div class="row g-4">
+                <!-- Sidebar Filters -->
+                <div class="col-lg-3">
+                    <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 100px;" data-aos="fade-right">
+                        <div class="card-header bg-white fw-bold py-3 border-bottom-0 rounded-top-4">
+                            <i class="fa-solid fa-filter text-primary me-2"></i> Search Filters
                         </div>
-                    </div>
-                    
-                    <div th:if="${#lists.isEmpty(vehiclePage.content)}" class="col-12 text-center py-5">
-                        <div class="text-muted">
-                            <i class="fa-solid fa-car-side fa-3x mb-3"></i>
-                            <h3>No vehicles found</h3>
-                            <p>Try adjusting your filters to see more results.</p>
+                        <div class="card-body bg-light rounded-bottom-4">
+                            <form th:action="@{/vehicles}" method="get" class="no-loader">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted">Vehicle Type</label>
+                                    <select name="type" class="form-select border-0 shadow-sm rounded-3">
+                                        <option value="">All Types</option>
+                                        <option th:each="t : ${types}" th:value="${t}" th:text="${t}" th:selected="${t == typeFilter}"></option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted">Brand</label>
+                                    <input type="text" name="brand" th:value="${brandFilter}" class="form-control border-0 shadow-sm rounded-3" placeholder="e.g. Toyota">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted">Price Range ($/day)</label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <input type="number" name="minPrice" th:value="${minPriceFilter}" class="form-control border-0 shadow-sm rounded-3" placeholder="Min">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number" name="maxPrice" th:value="${maxPriceFilter}" class="form-control border-0 shadow-sm rounded-3" placeholder="Max">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted">Sort By</label>
+                                    <select name="sortField" class="form-select mb-2 border-0 shadow-sm rounded-3">
+                                        <option value="pricePerDay" th:selected="${sortField == 'pricePerDay'}">Price</option>
+                                        <option value="brand" th:selected="${sortField == 'brand'}">Brand</option>
+                                    </select>
+                                    <select name="sortDir" class="form-select border-0 shadow-sm rounded-3">
+                                        <option value="asc" th:selected="${sortDir == 'asc'}">Ascending</option>
+                                        <option value="desc" th:selected="${sortDir == 'desc'}">Descending</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Retain date inputs from home search if present -->
+                                <input type="hidden" name="startDate" th:if="${param.startDate}" th:value="${param.startDate}">
+                                <input type="hidden" name="endDate" th:if="${param.endDate}" th:value="${param.endDate}">
+
+                                <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill shadow-sm hover-lift mb-2">Apply Filters</button>
+                                <a th:href="@{/vehicles}" class="btn btn-outline-secondary w-100 rounded-pill hover-lift">Clear Filters</a>
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="mt-5" th:if="${vehiclePage.totalPages > 1}">
-                    <nav>
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:classappend="${vehiclePage.first ? 'disabled' : ''}">
-                                <a class="page-link" th:href="@{/vehicles(page=${vehiclePage.number - 1}, type=${typeFilter}, brand=${brandFilter}, minPrice=${minPriceFilter}, maxPrice=${maxPriceFilter}, sortField=${sortField}, sortDir=${sortDir})}">Previous</a>
-                            </li>
-                            <li class="page-item" th:each="i : ${#numbers.sequence(0, vehiclePage.totalPages - 1)}" th:classappend="${i == vehiclePage.number ? 'active' : ''}">
-                                <a class="page-link" th:href="@{/vehicles(page=${i}, type=${typeFilter}, brand=${brandFilter}, minPrice=${minPriceFilter}, maxPrice=${maxPriceFilter}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
-                            </li>
-                            <li class="page-item" th:classappend="${vehiclePage.last ? 'disabled' : ''}">
-                                <a class="page-link" th:href="@{/vehicles(page=${vehiclePage.number + 1}, type=${typeFilter}, brand=${brandFilter}, minPrice=${minPriceFilter}, maxPrice=${maxPriceFilter}, sortField=${sortField}, sortDir=${sortDir})}">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                <!-- Vehicle Grid -->
+                <div class="col-lg-9">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                        <div class="col" th:each="vehicle, stat : ${vehiclePage.content}" data-aos="fade-up" th:data-aos-delay="${(stat.index % 3) * 100}">
+                            <div class="card h-100 shadow-sm border-0 rounded-4 hover-lift">
+                                <div class="img-zoom-wrapper rounded-top-4 position-relative">
+                                    <span class="badge bg-primary position-absolute top-0 start-0 m-3 p-2 shadow-sm rounded-pill px-3" th:text="${vehicle.type}">TYPE</span>
+                                    <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=600&auto=format&fit=crop'}" 
+                                         class="card-img-top" th:alt="${vehicle.brand + ' ' + vehicle.model}" style="height: 200px; object-fit: cover;">
+                                </div>
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <h5 class="card-title fw-bold mb-1" th:text="${vehicle.brand + ' ' + vehicle.model}"></h5>
+                                    
+                                    <div class="d-flex align-items-center text-muted small mb-4">
+                                        <span class="me-3" title="Automatic"><i class="fa-solid fa-gear me-1 text-primary"></i> Auto</span>
+                                        <span class="me-3" title="Seats"><i class="fa-solid fa-users me-1 text-primary"></i> 4/5</span>
+                                        <span title="AC"><i class="fa-solid fa-snowflake me-1 text-primary"></i> Yes</span>
+                                    </div>
+                                    
+                                    <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top border-light">
+                                        <div>
+                                            <p class="text-muted small mb-0 lh-1">Per day</p>
+                                            <h4 class="fw-bold text-accent mb-0 lh-1">$<span th:text="${vehicle.pricePerDay}"></span></h4>
+                                        </div>
+                                        <a th:href="@{/vehicles/{id}(id=${vehicle.id})}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div th:if="${#lists.isEmpty(vehiclePage.content)}" class="col-12 text-center py-5" data-aos="fade-in">
+                            <div class="bg-white p-5 rounded-4 shadow-sm">
+                                <i class="fa-solid fa-car-side fa-4x text-muted mb-4 opacity-50"></i>
+                                <h3 class="fw-bold">No vehicles found</h3>
+                                <p class="text-muted">Try adjusting your filters or search criteria to see more results.</p>
+                                <a th:href="@{/vehicles}" class="btn btn-primary rounded-pill px-4 hover-lift">View All Vehicles</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-5" th:if="${vehiclePage.totalPages > 1}" data-aos="fade-up">
+                        <nav>
+                            <ul class="pagination justify-content-center shadow-sm rounded-pill overflow-hidden bg-white d-inline-flex m-0">
+                                <li class="page-item" th:classappend="${vehiclePage.first ? 'disabled' : ''}">
+                                    <a class="page-link border-0 px-4 py-2" th:href="@{/vehicles(page=${vehiclePage.number - 1}, type=${typeFilter}, brand=${brandFilter}, minPrice=${minPriceFilter}, maxPrice=${maxPriceFilter}, sortField=${sortField}, sortDir=${sortDir})}">
+                                        <i class="fa-solid fa-chevron-left me-1"></i> Prev
+                                    </a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, vehiclePage.totalPages - 1)}" th:classappend="${i == vehiclePage.number ? 'active' : ''}">
+                                    <a class="page-link border-0 px-3 py-2 fw-bold" th:classappend="${i == vehiclePage.number ? 'bg-primary text-white' : ''}" th:href="@{/vehicles(page=${i}, type=${typeFilter}, brand=${brandFilter}, minPrice=${minPriceFilter}, maxPrice=${maxPriceFilter}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${vehiclePage.last ? 'disabled' : ''}">
+                                    <a class="page-link border-0 px-4 py-2" th:href="@{/vehicles(page=${vehiclePage.number + 1}, type=${typeFilter}, brand=${brandFilter}, minPrice=${minPriceFilter}, maxPrice=${maxPriceFilter}, sortField=${sortField}, sortDir=${sortDir})}">
+                                        Next <i class="fa-solid fa-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>

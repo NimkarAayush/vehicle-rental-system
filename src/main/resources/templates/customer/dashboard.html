@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>Customer Dashboard</title>
+    <title>My Dashboard</title>
 </head>
-<body>
-    <div layout:fragment="content">
-        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <h2 class="fw-bold"><i class="fa-solid fa-user me-2"></i>My Dashboard</h2>
-            <span class="badge bg-primary fs-6">Customer Portal</span>
-        </div>
+<body class="bg-light">
+    <div layout:fragment="content" class="container py-5">
         
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h4 class="card-title">Hello, <span th:text="${currentUser.firstName}">Customer</span>!</h4>
-                        <p class="text-muted">Welcome to your dashboard. Your bookings and payment history will appear here once features are implemented.</p>
+        <div class="row g-4" data-aos="fade-up">
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 90px;">
+                    <div class="card-body p-4 text-center border-bottom border-light">
+                        <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 100px; height: 100px;">
+                            <i class="fa-solid fa-user fa-3x"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1" th:text="${currentUser.firstName + ' ' + currentUser.lastName}">Customer Name</h3>
+                        <p class="text-muted mb-0" th:text="${currentUser.email}">email@example.com</p>
+                    </div>
+                    <div class="list-group list-group-flush rounded-bottom-4">
+                        <a th:href="@{/customer/dashboard}" class="list-group-item list-group-item-action py-3 fw-bold active bg-primary border-primary text-white"><i class="fa-solid fa-chart-line me-2"></i> Overview</a>
+                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-calendar-check me-2"></i> My Bookings</a>
+                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-heart me-2"></i> Saved Vehicles</a>
+                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-gear me-2"></i> Account Settings</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold mb-0">Welcome Back!</h2>
+                    <a th:href="@{/vehicles}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm hover-lift"><i class="fa-solid fa-magnifying-glass me-2"></i> Find a Car</a>
+                </div>
+                
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-5 text-center">
+                        <div class="mb-4">
+                            <i class="fa-solid fa-calendar-xmark fa-4x text-muted opacity-25"></i>
+                        </div>
+                        <h4 class="fw-bold">No Active Bookings</h4>
+                        <p class="text-muted mx-auto mb-4" style="max-width: 400px;">You don't have any upcoming trips scheduled. Ready for your next adventure?</p>
+                        <a th:href="@{/vehicles}" class="btn btn-outline-primary rounded-pill px-5 py-2 fw-bold hover-lift">Browse Vehicles</a>
                     </div>
                 </div>
             </div>

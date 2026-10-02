@@ -3,121 +3,124 @@
 <head>
     <title>Manage Vehicles - Admin</title>
 </head>
-<body>
-    <div layout:fragment="content">
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-            <h2 class="fw-bold"><i class="fa-solid fa-car me-2"></i>Manage Vehicles</h2>
-            <a th:href="@{/admin/vehicles/new}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Add Vehicle</a>
+<body class="bg-light">
+    <div layout:fragment="content" class="py-4 container-fluid px-4">
+        
+        <div class="d-flex justify-content-between align-items-end mb-4" data-aos="fade-down">
+            <div>
+                <h2 class="fw-bold mb-1"><i class="fa-solid fa-car text-primary me-2"></i>Fleet Management</h2>
+                <p class="text-muted mb-0">View, add, edit, and manage vehicle statuses.</p>
+            </div>
+            <a th:href="@{/admin/vehicles/new}" class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm hover-lift">
+                <i class="fa-solid fa-plus me-1"></i> Add Vehicle
+            </a>
         </div>
 
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span th:text="${successMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <span th:text="${errorMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <!-- Filters -->
-        <div class="card shadow-sm mb-4 border-0">
-            <div class="card-body bg-light">
-                <form th:action="@{/admin/vehicles}" method="get" class="row g-3 align-items-center">
+        <div class="card shadow-sm border-0 rounded-4 mb-4" data-aos="fade-up">
+            <div class="card-body bg-white rounded-4 p-4">
+                <form th:action="@{/admin/vehicles}" method="get" class="row g-3 align-items-center no-loader">
                     <div class="col-md-5">
-                        <input type="text" name="search" th:value="${search}" class="form-control" placeholder="Search brand, model, or reg #">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" name="search" th:value="${search}" class="form-control bg-light border-0 shadow-none" placeholder="Search brand, model, or reg #">
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <select name="status" class="form-select">
+                        <select name="status" class="form-select bg-light border-0 shadow-none">
                             <option value="">All Statuses</option>
                             <option th:each="stat : ${statuses}" th:value="${stat}" th:text="${stat}" th:selected="${stat == statusFilter}"></option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                        <button type="submit" class="btn btn-secondary w-100 rounded-pill fw-bold">Filter Results</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Table -->
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm border-0 rounded-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card-body p-0 table-responsive">
-                <table class="table table-hover mb-0 align-middle">
+                <table class="table table-hover mb-0 align-middle border-light">
                     <thead class="table-light">
                         <tr>
-                            <th><a th:href="@{/admin/vehicles(sortField='id', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">ID <i class="fa-solid fa-sort"></i></a></th>
-                            <th>Image</th>
-                            <th><a th:href="@{/admin/vehicles(sortField='brand', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">Vehicle <i class="fa-solid fa-sort"></i></a></th>
-                            <th>Reg #</th>
-                            <th><a th:href="@{/admin/vehicles(sortField='pricePerDay', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">Price/Day <i class="fa-solid fa-sort"></i></a></th>
-                            <th><a th:href="@{/admin/vehicles(sortField='status', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">Status <i class="fa-solid fa-sort"></i></a></th>
-                            <th class="text-end">Actions</th>
+                            <th class="ps-4 rounded-top-left-4 border-0 py-3 text-muted small text-uppercase tracking-wide"><a th:href="@{/admin/vehicles(sortField='id', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-muted">ID <i class="fa-solid fa-sort ms-1"></i></a></th>
+                            <th class="border-0 py-3 text-muted small text-uppercase tracking-wide">Image</th>
+                            <th class="border-0 py-3 text-muted small text-uppercase tracking-wide"><a th:href="@{/admin/vehicles(sortField='brand', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-muted">Vehicle <i class="fa-solid fa-sort ms-1"></i></a></th>
+                            <th class="border-0 py-3 text-muted small text-uppercase tracking-wide">Reg #</th>
+                            <th class="border-0 py-3 text-muted small text-uppercase tracking-wide"><a th:href="@{/admin/vehicles(sortField='pricePerDay', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-muted">Price/Day <i class="fa-solid fa-sort ms-1"></i></a></th>
+                            <th class="border-0 py-3 text-muted small text-uppercase tracking-wide"><a th:href="@{/admin/vehicles(sortField='status', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-muted">Status <i class="fa-solid fa-sort ms-1"></i></a></th>
+                            <th class="text-end pe-4 rounded-top-right-4 border-0 py-3 text-muted small text-uppercase tracking-wide">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="vehicle : ${vehiclePage.content}">
-                            <td th:text="${vehicle.id}"></td>
+                            <td class="ps-4 fw-bold text-muted" th:text="${'#' + vehicle.id}"></td>
                             <td>
-                                <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://via.placeholder.com/150x100?text=No+Image'}" alt="Vehicle" style="width: 60px; height: 40px; object-fit: cover;" class="rounded">
+                                <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://via.placeholder.com/150x100?text=No+Image'}" alt="Vehicle" style="width: 70px; height: 46px; object-fit: cover;" class="rounded-3 shadow-sm">
                             </td>
                             <td>
-                                <div class="fw-bold" th:text="${vehicle.brand + ' ' + vehicle.model}"></div>
-                                <small class="text-muted" th:text="${vehicle.type}"></small>
+                                <div class="fw-bold text-dark" th:text="${vehicle.brand + ' ' + vehicle.model}"></div>
+                                <span class="badge bg-light text-secondary border mt-1" th:text="${vehicle.type}"></span>
                             </td>
-                            <td th:text="${vehicle.registrationNumber}"></td>
-                            <td th:text="${'$' + vehicle.pricePerDay}"></td>
+                            <td class="fw-medium font-monospace" th:text="${vehicle.registrationNumber}"></td>
+                            <td class="fw-bold text-accent" th:text="${'$' + vehicle.pricePerDay}"></td>
                             <td>
-                                <span class="badge" th:classappend="${vehicle.status.name() == 'AVAILABLE' ? 'bg-success' : (vehicle.status.name() == 'RENTED' ? 'bg-primary' : 'bg-warning')}" th:text="${vehicle.status}"></span>
+                                <span class="badge px-3 py-2 rounded-pill shadow-sm" th:classappend="${vehicle.status.name() == 'AVAILABLE' ? 'bg-success' : (vehicle.status.name() == 'RENTED' ? 'bg-primary' : 'bg-warning')}" th:text="${vehicle.status}"></span>
                             </td>
-                            <td class="text-end">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Status
+                            <td class="text-end pe-4">
+                                <div class="btn-group shadow-sm rounded-pill">
+                                    <button type="button" class="btn btn-sm btn-light border dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-bolt text-warning"></i>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3">
                                         <li>
                                             <form th:action="@{/admin/vehicles/status/{id}(id=${vehicle.id})}" method="post">
                                                 <input type="hidden" name="status" value="AVAILABLE">
-                                                <button type="submit" class="dropdown-item">Mark Available</button>
+                                                <button type="submit" class="dropdown-item py-2 fw-medium"><i class="fa-solid fa-circle-check text-success me-2"></i> Mark Available</button>
                                             </form>
                                         </li>
                                         <li>
                                             <form th:action="@{/admin/vehicles/status/{id}(id=${vehicle.id})}" method="post">
                                                 <input type="hidden" name="status" value="RENTED">
-                                                <button type="submit" class="dropdown-item">Mark Rented</button>
+                                                <button type="submit" class="dropdown-item py-2 fw-medium"><i class="fa-solid fa-key text-primary me-2"></i> Mark Rented</button>
                                             </form>
                                         </li>
                                         <li>
                                             <form th:action="@{/admin/vehicles/status/{id}(id=${vehicle.id})}" method="post">
                                                 <input type="hidden" name="status" value="MAINTENANCE">
-                                                <button type="submit" class="dropdown-item">Mark Maintenance</button>
+                                                <button type="submit" class="dropdown-item py-2 fw-medium"><i class="fa-solid fa-wrench text-warning me-2"></i> Mark Maintenance</button>
                                             </form>
                                         </li>
                                     </ul>
                                 </div>
-                                <a th:href="@{/admin/vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
-                                <a th:href="@{/admin/vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                                <a th:href="@{/admin/vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-sm btn-light border shadow-sm rounded-circle ms-1" style="width: 32px; height: 32px;" title="Edit"><i class="fa-solid fa-pen text-primary"></i></a>
+                                <a th:href="@{/admin/vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-sm btn-light border shadow-sm rounded-circle ms-1" style="width: 32px; height: 32px;" title="Delete"><i class="fa-solid fa-trash text-danger"></i></a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(vehiclePage.content)}">
-                            <td colspan="7" class="text-center py-4 text-muted">No vehicles found.</td>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fa-solid fa-inbox fa-3x mb-3 opacity-50"></i>
+                                    <h5>No vehicles found.</h5>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             
             <!-- Pagination -->
-            <div class="card-footer bg-white py-3" th:if="${vehiclePage.totalPages > 1}">
+            <div class="card-footer bg-white py-3 border-0 rounded-bottom-4" th:if="${vehiclePage.totalPages > 1}">
                 <nav>
                     <ul class="pagination justify-content-center mb-0">
                         <li class="page-item" th:classappend="${vehiclePage.first ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/admin/vehicles(page=${vehiclePage.number - 1}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}">Previous</a>
+                            <a class="page-link border-0" th:href="@{/admin/vehicles(page=${vehiclePage.number - 1}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}">Prev</a>
                         </li>
                         <li class="page-item" th:each="i : ${#numbers.sequence(0, vehiclePage.totalPages - 1)}" th:classappend="${i == vehiclePage.number ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/admin/vehicles(page=${i}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+                            <a class="page-link border-0 rounded-circle mx-1" th:classappend="${i == vehiclePage.number ? 'bg-primary text-white shadow-sm' : ''}" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;" th:href="@{/admin/vehicles(page=${i}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
                         </li>
                         <li class="page-item" th:classappend="${vehiclePage.last ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/admin/vehicles(page=${vehiclePage.number + 1}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}">Next</a>
+                            <a class="page-link border-0" th:href="@{/admin/vehicles(page=${vehiclePage.number + 1}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}">Next</a>
                         </li>
                     </ul>
                 </nav>

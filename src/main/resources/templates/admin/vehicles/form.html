@@ -3,82 +3,123 @@
 <head>
     <title th:text="${vehicleDto.id == null ? 'Add Vehicle' : 'Edit Vehicle'}">Vehicle Form</title>
 </head>
-<body>
-    <div layout:fragment="content" class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-                <h2 class="fw-bold" th:text="${vehicleDto.id == null ? 'Add New Vehicle' : 'Edit Vehicle'}"></h2>
-                <a th:href="@{/admin/vehicles}" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Back to List</a>
-            </div>
+<body class="bg-light">
+    <div layout:fragment="content" class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold mb-0">
+                        <i class="fa-solid fa-car-side text-primary me-2"></i>
+                        <span th:text="${vehicleDto.id == null ? 'Add New Vehicle' : 'Edit Vehicle'}"></span>
+                    </h2>
+                    <a th:href="@{/admin/vehicles}" class="btn btn-outline-secondary rounded-pill px-4 fw-bold hover-lift"><i class="fa-solid fa-arrow-left me-1"></i> Back</a>
+                </div>
 
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <form th:action="${vehicleDto.id == null ? '/admin/vehicles/new' : '/admin/vehicles/edit/' + vehicleDto.id}" 
-                          method="post" th:object="${vehicleDto}" enctype="multipart/form-data">
-                        
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="brand" class="form-label">Brand</label>
-                                <input type="text" id="brand" th:field="*{brand}" class="form-control" th:classappend="${#fields.hasErrors('brand')} ? 'is-invalid'">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></div>
-                            </div>
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4 p-md-5">
+                        <form th:action="${vehicleDto.id == null ? '/admin/vehicles/new' : '/admin/vehicles/edit/' + vehicleDto.id}" 
+                              method="post" th:object="${vehicleDto}" enctype="multipart/form-data">
                             
-                            <div class="col-md-6">
-                                <label for="model" class="form-label">Model</label>
-                                <input type="text" id="model" th:field="*{model}" class="form-control" th:classappend="${#fields.hasErrors('model')} ? 'is-invalid'">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></div>
-                            </div>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="brand" th:field="*{brand}" class="form-control bg-light border-0 shadow-none" th:classappend="${#fields.hasErrors('brand')} ? 'is-invalid'" placeholder="Brand">
+                                        <label for="brand" class="text-muted">Brand (e.g. Toyota)</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="model" th:field="*{model}" class="form-control bg-light border-0 shadow-none" th:classappend="${#fields.hasErrors('model')} ? 'is-invalid'" placeholder="Model">
+                                        <label for="model" class="text-muted">Model (e.g. Camry)</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></div>
+                                    </div>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label for="type" class="form-label">Type</label>
-                                <select id="type" th:field="*{type}" class="form-select" th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'">
-                                    <option value="">Select Type</option>
-                                    <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
-                                </select>
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select id="type" th:field="*{type}" class="form-select bg-light border-0 shadow-none" th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'">
+                                            <option value="">Select Type</option>
+                                            <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+                                        </select>
+                                        <label for="type" class="text-muted">Vehicle Type</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+                                    </div>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label for="registrationNumber" class="form-label">Registration Number</label>
-                                <input type="text" id="registrationNumber" th:field="*{registrationNumber}" class="form-control" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'is-invalid'">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('registrationNumber')}" th:errors="*{registrationNumber}"></div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select id="status" th:field="*{status}" class="form-select bg-light border-0 shadow-none" th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'">
+                                            <option value="">Select Status</option>
+                                            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                                        </select>
+                                        <label for="status" class="text-muted">Current Status</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                                    </div>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label for="pricePerDay" class="form-label">Price Per Day ($)</label>
-                                <input type="number" step="0.01" id="pricePerDay" th:field="*{pricePerDay}" class="form-control" th:classappend="${#fields.hasErrors('pricePerDay')} ? 'is-invalid'">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('pricePerDay')}" th:errors="*{pricePerDay}"></div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" id="registrationNumber" th:field="*{registrationNumber}" class="form-control bg-light border-0 shadow-none text-uppercase font-monospace" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'is-invalid'" placeholder="Reg Number">
+                                        <label for="registrationNumber" class="text-muted">License Plate</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('registrationNumber')}" th:errors="*{registrationNumber}"></div>
+                                    </div>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label for="status" class="form-label">Status</label>
-                                <select id="status" th:field="*{status}" class="form-select" th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'">
-                                    <option value="">Select Status</option>
-                                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
-                                </select>
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
-                            </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" step="0.01" id="pricePerDay" th:field="*{pricePerDay}" class="form-control bg-light border-0 shadow-none text-accent fw-bold fs-5" th:classappend="${#fields.hasErrors('pricePerDay')} ? 'is-invalid'" placeholder="Price">
+                                        <label for="pricePerDay" class="text-muted">Daily Rate ($)</label>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('pricePerDay')}" th:errors="*{pricePerDay}"></div>
+                                    </div>
+                                </div>
 
-                            <div class="col-12">
-                                <label for="imageFile" class="form-label">Vehicle Image (JPG/PNG, max 5MB)</label>
-                                <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/jpeg, image/png">
-                                <div th:if="${vehicleDto.currentImageUrl != null}" class="mt-2">
-                                    <p class="mb-1 text-muted small">Current Image:</p>
-                                    <img th:src="${vehicleDto.currentImageUrl}" alt="Current" style="height: 100px; object-fit: cover;" class="rounded border">
-                                    <input type="hidden" th:field="*{currentImageUrl}">
+                                <div class="col-12 mt-4 pt-3 border-top">
+                                    <h5 class="fw-bold mb-3"><i class="fa-regular fa-image text-primary me-2"></i>Vehicle Image</h5>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <label for="imageFile" class="form-label text-muted small">Upload high-quality photo (JPG/PNG, max 5MB)</label>
+                                            <input type="file" id="imageFile" name="imageFile" class="form-control bg-light border-0 shadow-none form-control-lg" accept="image/jpeg, image/png">
+                                        </div>
+                                        <div class="col-md-4 text-center mt-3 mt-md-0">
+                                            <div id="imagePreviewContainer" class="rounded-3 overflow-hidden shadow-sm border" style="height: 120px; background-color: #f8f9fa;">
+                                                <img id="imagePreview" th:src="${vehicleDto.currentImageUrl != null ? vehicleDto.currentImageUrl : 'https://via.placeholder.com/300x200?text=Preview'}" 
+                                                     alt="Preview" class="w-100 h-100" style="object-fit: cover;">
+                                            </div>
+                                            <input type="hidden" th:field="*{currentImageUrl}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <hr class="my-4">
-                        <div class="text-end">
-                            <a th:href="@{/admin/vehicles}" class="btn btn-light me-2">Cancel</a>
-                            <button type="submit" class="btn btn-primary fw-bold" th:text="${vehicleDto.id == null ? 'Save Vehicle' : 'Update Vehicle'}"></button>
-                        </div>
-                    </form>
+                            <div class="mt-5 text-end">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm hover-lift">
+                                    <i class="fa-solid fa-save me-2"></i> <span th:text="${vehicleDto.id == null ? 'Save Vehicle' : 'Update Vehicle'}"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <th:block layout:fragment="scripts">
+        <script>
+            // Image Preview Logic
+            document.getElementById('imageFile').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('imagePreview').src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
+    </th:block>
 </body>
 </html>
