@@ -33,6 +33,8 @@ public class PublicVehicleController {
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") java.time.LocalDate startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") java.time.LocalDate endDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size,
             @RequestParam(defaultValue = "pricePerDay") String sortField,
@@ -46,7 +48,7 @@ public class PublicVehicleController {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Vehicle> vehiclePage = vehicleService.findAvailableFiltered(type, brand, minPrice, maxPrice, pageable);
+        Page<Vehicle> vehiclePage = vehicleService.findAvailableFiltered(type, brand, minPrice, maxPrice, startDate, endDate, pageable);
 
         model.addAttribute("vehiclePage", vehiclePage);
         model.addAttribute("typeFilter", type);
@@ -61,9 +63,18 @@ public class PublicVehicleController {
     }
 
     @GetMapping("/{id}")
-    public String viewVehicleDetails(@PathVariable Long id, Model model) {
+    public String viewVehicleDetails(@PathVariable Long id, 
+                                     @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") java.time.LocalDate startDate,
+                                     @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") java.time.LocalDate endDate,
+                                     Model model) {
         Vehicle vehicle = vehicleService.findById(id);
+        
+        com.vehiclerental.dto.BookingFormDto bookingDto = new com.vehiclerental.dto.BookingFormDto();
+        if (startDate != null) bookingDto.setStartDate(startDate);
+        if (endDate != null) bookingDto.setEndDate(endDate);
+        
         model.addAttribute("vehicle", vehicle);
+        model.addAttribute("bookingDto", bookingDto);
         return "vehicles/details";
     }
 }

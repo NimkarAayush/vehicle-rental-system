@@ -44,4 +44,7 @@ public class Vehicle {
     private VehicleStatus status;
 
     private String imageUrl;
+
+    @Version
+    private Long version;
 }

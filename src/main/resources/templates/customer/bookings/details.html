@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Booking Details</title>
+</head>
+<body class="bg-light">
+    <div layout:fragment="content" class="container py-5">
+        <div class="mb-4" data-aos="fade-right">
+            <a th:href="@{/customer/bookings}" class="text-decoration-none text-muted hover-primary fw-bold"><i class="fa-solid fa-arrow-left me-2"></i> Back to My Bookings</a>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
+                        <h4 class="fw-bold mb-0">Booking #<span th:text="${booking.id}"></span></h4>
+                        <span class="badge px-3 py-2 rounded-pill shadow-sm" 
+                              th:classappend="${booking.status.name() == 'COMPLETED' ? 'bg-secondary' : (booking.status.name() == 'CANCELLED' ? 'bg-danger' : 'bg-success')}" 
+                              th:text="${booking.status}"></span>
+                    </div>
+                    
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <img th:src="${booking.vehicle.imageUrl != null ? booking.vehicle.imageUrl : 'https://via.placeholder.com/300x200?text=No+Image'}" class="img-fluid rounded-3 shadow-sm">
+                            </div>
+                            <div class="col-md-8">
+                                <h3 class="fw-bold mb-1" th:text="${booking.vehicle.brand + ' ' + booking.vehicle.model}"></h3>
+                                <p class="text-muted font-monospace mb-2"><i class="fa-solid fa-fingerprint me-1 text-primary"></i> <span th:text="${booking.vehicle.registrationNumber}"></span></p>
+                                <a th:href="@{/vehicles/{id}(id=${booking.vehicle.id})}" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">View Vehicle</a>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-light p-4 rounded-4 border mb-4 shadow-sm">
+                            <div class="row g-4 text-center text-md-start">
+                                <div class="col-md-6 border-end border-light">
+                                    <p class="text-muted small fw-bold text-uppercase mb-1">Pick-up Date</p>
+                                    <h4 class="fw-bold text-dark mb-0" th:text="${booking.startDate}"></h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="text-muted small fw-bold text-uppercase mb-1">Return Date</p>
+                                    <h4 class="fw-bold text-dark mb-0" th:text="${booking.endDate}"></h4>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4 p-3 border-top border-bottom">
+                            <span class="fs-5 fw-bold text-muted">Total Paid</span>
+                            <span class="display-6 fw-bold text-accent" th:text="${'$' + booking.totalPrice}"></span>
+                        </div>
+                        
+                        <div th:if="${booking.status.name() == 'PENDING' or booking.status.name() == 'CONFIRMED'}" class="text-end">
+                            <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm hover-lift" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                <i class="fa-solid fa-xmark me-2"></i> Cancel Booking
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel Confirmation Modal -->
+        <div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true" th:if="${booking.status.name() == 'PENDING' or booking.status.name() == 'CONFIRMED'}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="modal-body p-5 text-center">
+                        <div class="text-danger mb-4">
+                            <i class="fa-solid fa-triangle-exclamation fa-4x shake"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Cancel Booking?</h4>
+                        <p class="text-muted mb-4">Are you sure you want to cancel this booking? This action cannot be undone.</p>
+                        <form th:action="@{/customer/bookings/{id}/cancel(id=${booking.id})}" method="post">
+                            <div class="d-flex gap-2 justify-content-center">
+                                <button type="button" class="btn btn-light rounded-pill px-4 fw-bold flex-grow-1" data-bs-dismiss="modal">Keep Booking</button>
+                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold flex-grow-1 shadow-sm">Yes, Cancel It</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

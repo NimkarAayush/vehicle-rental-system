@@ -19,8 +19,7 @@
                     </div>
                     <div class="list-group list-group-flush rounded-bottom-4">
                         <a th:href="@{/customer/dashboard}" class="list-group-item list-group-item-action py-3 fw-bold active bg-primary border-primary text-white"><i class="fa-solid fa-chart-line me-2"></i> Overview</a>
-                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-calendar-check me-2"></i> My Bookings</a>
-                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-heart me-2"></i> Saved Vehicles</a>
+                        <a th:href="@{/customer/bookings}" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-calendar-check me-2"></i> My Bookings</a>
                         <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-gear me-2"></i> Account Settings</a>
                     </div>
                 </div>
@@ -33,14 +32,54 @@
                     <a th:href="@{/vehicles}" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm hover-lift"><i class="fa-solid fa-magnifying-glass me-2"></i> Find a Car</a>
                 </div>
                 
-                <div class="card shadow-sm border-0 rounded-4 mb-4">
-                    <div class="card-body p-5 text-center">
-                        <div class="mb-4">
-                            <i class="fa-solid fa-calendar-xmark fa-4x text-muted opacity-25"></i>
+                <div class="row mb-4">
+                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card bg-gradient text-white shadow border-0 rounded-4 h-100 hover-lift overflow-hidden position-relative" style="background: linear-gradient(135deg, var(--bs-primary), var(--bs-accent));">
+                            <i class="fa-solid fa-calendar-check fa-4x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold text-white-50 text-uppercase tracking-wide mb-1">My Bookings</h6>
+                                <h2 class="display-5 fw-bold mb-0" th:text="${#lists.size(recentBookings)}">0</h2>
+                            </div>
                         </div>
-                        <h4 class="fw-bold">No Active Bookings</h4>
-                        <p class="text-muted mx-auto mb-4" style="max-width: 400px;">You don't have any upcoming trips scheduled. Ready for your next adventure?</p>
-                        <a th:href="@{/vehicles}" class="btn btn-outline-primary rounded-pill px-5 py-2 fw-bold hover-lift">Browse Vehicles</a>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-white p-4 border-bottom">
+                        <h5 class="fw-bold mb-0">Recent Bookings</h5>
+                    </div>
+                    <div class="card-body p-0 table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 border-0 py-3 text-muted small text-uppercase">Vehicle</th>
+                                    <th class="border-0 py-3 text-muted small text-uppercase">Dates</th>
+                                    <th class="border-0 py-3 text-muted small text-uppercase">Status</th>
+                                    <th class="text-end pe-4 border-0 py-3 text-muted small text-uppercase">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="booking, stat : ${recentBookings}" th:if="${stat.index < 5}">
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark" th:text="${booking.vehicle.brand + ' ' + booking.vehicle.model}"></div>
+                                    </td>
+                                    <td class="small">
+                                        <span th:text="${booking.startDate}"></span> to <span th:text="${booking.endDate}"></span>
+                                    </td>
+                                    <td>
+                                        <span class="badge rounded-pill" th:classappend="${booking.status.name() == 'COMPLETED' ? 'bg-secondary' : (booking.status.name() == 'CANCELLED' ? 'bg-danger' : (booking.status.name() == 'ACTIVE' ? 'bg-primary' : 'bg-warning'))}" th:text="${booking.status}"></span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a th:href="@{/customer/bookings/{id}(id=${booking.id})}" class="btn btn-sm btn-light border fw-bold text-primary rounded-pill">View</a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentBookings)}">
+                                    <td colspan="4" class="text-center py-5 text-muted">
+                                        You don't have any bookings yet.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

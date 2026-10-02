@@ -20,8 +20,8 @@
                     <div class="list-group list-group-flush rounded-bottom-4">
                         <a th:href="@{/admin/dashboard}" class="list-group-item list-group-item-action py-3 fw-bold active bg-primary border-primary text-white"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
                         <a th:href="@{/admin/vehicles}" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-car me-2"></i> Manage Vehicles</a>
-                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-calendar-check me-2"></i> Bookings (Coming Soon)</a>
-                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-users me-2"></i> Users (Coming Soon)</a>
+                        <a th:href="@{/admin/bookings}" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-calendar-check me-2"></i> Bookings</a>
+                        <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-users me-2"></i> Users</a>
                         <a href="#" class="list-group-item list-group-item-action py-3 fw-medium text-muted"><i class="fa-solid fa-gear me-2"></i> Settings</a>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                             <i class="fa-solid fa-car fa-4x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
                             <div class="card-body p-4">
                                 <h6 class="fw-bold text-white-50 text-uppercase tracking-wide mb-1">Total Vehicles</h6>
-                                <h2 class="display-5 fw-bold mb-0">25</h2>
+                                <h2 class="display-5 fw-bold mb-0" th:text="${totalVehicles}">0</h2>
                             </div>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                             <i class="fa-solid fa-calendar-check fa-4x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
                             <div class="card-body p-4">
                                 <h6 class="fw-bold text-white-50 text-uppercase tracking-wide mb-1">Active Bookings</h6>
-                                <h2 class="display-5 fw-bold mb-0">12</h2>
+                                <h2 class="display-5 fw-bold mb-0" th:text="${activeBookings}">0</h2>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                             <i class="fa-solid fa-users fa-4x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
                             <div class="card-body p-4">
                                 <h6 class="fw-bold text-white-50 text-uppercase tracking-wide mb-1">Total Users</h6>
-                                <h2 class="display-5 fw-bold mb-0">150</h2>
+                                <h2 class="display-5 fw-bold mb-0" th:text="${totalUsers}">0</h2>
                             </div>
                         </div>
                     </div>

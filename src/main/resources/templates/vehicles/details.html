@@ -46,9 +46,41 @@
                             </div>
                             
                             <div class="mt-auto">
-                                <button class="btn btn-primary btn-lg w-100 fw-bold rounded-pill shadow-sm hover-lift" th:disabled="${vehicle.status.name() != 'AVAILABLE'}">
-                                    <i class="fa-solid fa-calendar-check me-2"></i> Proceed to Booking
-                                </button>
+                                <div th:if="${vehicle.status.name() == 'MAINTENANCE'}" class="alert alert-warning mb-0">
+                                    <i class="fa-solid fa-wrench me-2"></i> This vehicle is currently in maintenance and cannot be booked.
+                                </div>
+                                <div th:if="${vehicle.status.name() != 'MAINTENANCE'}">
+                                    <div sec:authorize="isAuthenticated()" th:if="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                                        <form th:action="@{/customer/bookings/create}" method="post" th:object="${bookingDto}" class="bg-light p-3 rounded-4 shadow-sm border mb-0">
+                                            <input type="hidden" name="vehicleId" th:value="${vehicle.id}">
+                                            <h6 class="fw-bold mb-3">Book this Vehicle</h6>
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-6">
+                                                    <label class="form-label small text-muted fw-bold mb-1">Pick-up</label>
+                                                    <input type="date" id="startDate" th:field="*{startDate}" class="form-control form-control-sm shadow-none" required>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label small text-muted fw-bold mb-1">Return</label>
+                                                    <input type="date" id="endDate" th:field="*{endDate}" class="form-control form-control-sm shadow-none" required>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="text-muted small fw-bold">Total Estimated Price:</span>
+                                                <span class="fw-bold text-accent fs-5" id="livePrice">$0.00</span>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill shadow-sm hover-lift">
+                                                <i class="fa-solid fa-calendar-check me-2"></i> Confirm Booking
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div sec:authorize="!isAuthenticated()" class="bg-light p-4 text-center rounded-4 shadow-sm border">
+                                        <h5 class="fw-bold mb-3">Want to book this vehicle?</h5>
+                                        <a th:href="@{/login}" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm hover-lift">Log in to Book</a>
+                                    </div>
+                                    <div sec:authorize="isAuthenticated()" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="bg-light p-4 text-center rounded-4 shadow-sm border">
+                                        <p class="text-muted mb-0 fw-bold"><i class="fa-solid fa-user-shield me-2"></i> Admins cannot create customer bookings.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -56,5 +88,43 @@
             </div>
         </div>
     </div>
+    
+    <th:block layout:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                const livePriceDisplay = document.getElementById('livePrice');
+                
+                /*<![CDATA[*/
+                const pricePerDay = /*[[${vehicle.pricePerDay}]]*/ 0;
+                /*]]>*/
+
+                function updatePrice() {
+                    if (!startDateInput || !endDateInput) return;
+                    
+                    const start = new Date(startDateInput.value);
+                    const end = new Date(endDateInput.value);
+                    
+                    if (!isNaN(start.getTime()) && !isNaN(end.getTime()) && end >= start) {
+                        const diffTime = Math.abs(end - start);
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (diffDays === 0) diffDays = 1;
+                        
+                        const total = diffDays * pricePerDay;
+                        livePriceDisplay.textContent = '$' + total.toFixed(2);
+                    } else {
+                        livePriceDisplay.textContent = '$0.00';
+                    }
+                }
+
+                if (startDateInput && endDateInput) {
+                    startDateInput.addEventListener('change', updatePrice);
+                    endDateInput.addEventListener('change', updatePrice);
+                    updatePrice(); // Init
+                }
+            });
+        </script>
+    </th:block>
 </body>
 </html>

@@ -1,2 +1,9 @@
 package com.vehiclerental.entity;
-public enum BookingStatus { PENDING, CONFIRMED, CANCELLED, COMPLETED }
+
+public enum BookingStatus {
+    PENDING,
+    CONFIRMED,
+    ACTIVE,
+    COMPLETED,
+    CANCELLED
+}

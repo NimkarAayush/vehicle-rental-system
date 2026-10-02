@@ -40,4 +40,8 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status;
+
+    @org.hibernate.annotations.CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private java.time.LocalDateTime createdAt;
 }

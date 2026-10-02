@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface VehicleService {
     Page<Vehicle> findAllFiltered(String search, VehicleStatus status, Pageable pageable);
     
-    Page<Vehicle> findAvailableFiltered(VehicleType type, String brand, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
+    Page<Vehicle> findAvailableFiltered(VehicleType type, String brand, BigDecimal minPrice, BigDecimal maxPrice, java.time.LocalDate startDate, java.time.LocalDate endDate, Pageable pageable);
 
     Vehicle findById(Long id);
     

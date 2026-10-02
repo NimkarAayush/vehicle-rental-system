@@ -52,7 +52,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> findAvailableFiltered(VehicleType type, String brand, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+    public Page<Vehicle> findAvailableFiltered(VehicleType type, String brand, BigDecimal minPrice, BigDecimal maxPrice, java.time.LocalDate startDate, java.time.LocalDate endDate, Pageable pageable) {
         Specification<Vehicle> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(cb.equal(root.get("status"), VehicleStatus.AVAILABLE));
@@ -68,6 +68,22 @@ public class VehicleServiceImpl implements VehicleService {
             }
             if (maxPrice != null) {
                 predicates.add(cb.lessThanOrEqualTo(root.get("pricePerDay"), maxPrice));
+            }
+
+            if (startDate != null && endDate != null) {
+                // Subquery: SELECT b.vehicle.id FROM Booking b WHERE b.status IN (CONFIRMED, ACTIVE) AND b.startDate <= endDate AND b.endDate >= startDate
+                jakarta.persistence.criteria.Subquery<Long> subquery = query.subquery(Long.class);
+                jakarta.persistence.criteria.Root<com.vehiclerental.entity.Booking> bookingRoot = subquery.from(com.vehiclerental.entity.Booking.class);
+                subquery.select(bookingRoot.get("vehicle").get("id"));
+
+                List<Predicate> subPredicates = new ArrayList<>();
+                subPredicates.add(bookingRoot.get("status").in(com.vehiclerental.entity.BookingStatus.CONFIRMED, com.vehiclerental.entity.BookingStatus.ACTIVE));
+                subPredicates.add(cb.lessThanOrEqualTo(bookingRoot.get("startDate"), endDate));
+                subPredicates.add(cb.greaterThanOrEqualTo(bookingRoot.get("endDate"), startDate));
+
+                subquery.where(cb.and(subPredicates.toArray(new Predicate[0])));
+                
+                predicates.add(cb.not(root.get("id").in(subquery)));
             }
             
             return cb.and(predicates.toArray(new Predicate[0]));
@@ -137,7 +153,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Transactional
     public void delete(Long id) {
         if (bookingRepository.existsByVehicleId(id)) {
-            throw new VehicleInUseException("Cannot delete vehicle because it has existing bookings.");
+            throw new VehicleInUseException("Cannot delete vehicle because it has booking history. Please set its status to MAINTENANCE instead.");
         }
         
         Vehicle vehicle = findById(id);
