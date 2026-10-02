@@ -67,6 +67,9 @@ public class CustomerBookingController {
         } catch (BookingConflictException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/vehicles/" + vehicleId;
+        } catch (org.springframework.orm.ObjectOptimisticLockingFailureException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "This vehicle was just booked by someone else, please try again.");
+            return "redirect:/vehicles/" + vehicleId;
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/vehicles/" + vehicleId;

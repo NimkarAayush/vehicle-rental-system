@@ -4,7 +4,10 @@ import com.vehiclerental.entity.*;
 import com.vehiclerental.repository.UserRepository;
 import com.vehiclerental.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +16,9 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Component
+@Profile("dev")
 @RequiredArgsConstructor
 public class DatabaseSeeder implements CommandLineRunner {
 
@@ -21,15 +26,22 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final VehicleRepository vehicleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.seed.admin.password}")
+    private String adminPassword;
+
+    @Value("${app.seed.customer.password}")
+    private String customerPassword;
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {
+            log.info("Database is empty. Seeding demo credentials...");
             User admin = User.builder()
                     .firstName("System")
                     .lastName("Admin")
                     .email("admin@vehiclerental.com")
-                    .password(passwordEncoder.encode("admin123"))
+                    .password(passwordEncoder.encode(adminPassword))
                     .role(Role.ADMIN)
                     .build();
                     
@@ -37,11 +49,12 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .firstName("John")
                     .lastName("Doe")
                     .email("john@example.com")
-                    .password(passwordEncoder.encode("password123"))
+                    .password(passwordEncoder.encode(customerPassword))
                     .role(Role.CUSTOMER)
                     .build();
                     
             userRepository.saveAll(Arrays.asList(admin, customer));
+            log.info("Demo credentials created. Admin: admin@vehiclerental.com, Customer: john@example.com");
         }
 
         if (vehicleRepository.count() == 0) {

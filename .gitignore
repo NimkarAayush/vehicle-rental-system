@@ -29,3 +29,8 @@ target/
 
 ### Uploads ###
 uploads/
+
+# Local env files
+.env
+application-local.yml
+application-local.properties
