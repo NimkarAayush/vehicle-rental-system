@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <h2 class="fw-bold"><i class="fa-solid fa-gauge me-2"></i>Admin Dashboard</h2>
+            <span class="badge bg-danger fs-6">Administrator Area</span>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h4 class="card-title">Welcome back, <span th:text="${currentUser.firstName + ' ' + currentUser.lastName}">Admin</span>!</h4>
+                        <p class="text-muted">You are logged in as an Administrator. Vehicle management features will be added here soon.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
