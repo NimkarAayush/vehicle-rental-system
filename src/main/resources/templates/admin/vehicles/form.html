@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="${vehicleDto.id == null ? 'Add Vehicle' : 'Edit Vehicle'}">Vehicle Form</title>
+</head>
+<body>
+    <div layout:fragment="content" class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold" th:text="${vehicleDto.id == null ? 'Add New Vehicle' : 'Edit Vehicle'}"></h2>
+                <a th:href="@{/admin/vehicles}" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Back to List</a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form th:action="${vehicleDto.id == null ? '/admin/vehicles/new' : '/admin/vehicles/edit/' + vehicleDto.id}" 
+                          method="post" th:object="${vehicleDto}" enctype="multipart/form-data">
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="brand" class="form-label">Brand</label>
+                                <input type="text" id="brand" th:field="*{brand}" class="form-control" th:classappend="${#fields.hasErrors('brand')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="model" class="form-label">Model</label>
+                                <input type="text" id="model" th:field="*{model}" class="form-control" th:classappend="${#fields.hasErrors('model')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="type" class="form-label">Type</label>
+                                <select id="type" th:field="*{type}" class="form-select" th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'">
+                                    <option value="">Select Type</option>
+                                    <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="registrationNumber" class="form-label">Registration Number</label>
+                                <input type="text" id="registrationNumber" th:field="*{registrationNumber}" class="form-control" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('registrationNumber')}" th:errors="*{registrationNumber}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="pricePerDay" class="form-label">Price Per Day ($)</label>
+                                <input type="number" step="0.01" id="pricePerDay" th:field="*{pricePerDay}" class="form-control" th:classappend="${#fields.hasErrors('pricePerDay')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('pricePerDay')}" th:errors="*{pricePerDay}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" th:field="*{status}" class="form-select" th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'">
+                                    <option value="">Select Status</option>
+                                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="imageFile" class="form-label">Vehicle Image (JPG/PNG, max 5MB)</label>
+                                <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/jpeg, image/png">
+                                <div th:if="${vehicleDto.currentImageUrl != null}" class="mt-2">
+                                    <p class="mb-1 text-muted small">Current Image:</p>
+                                    <img th:src="${vehicleDto.currentImageUrl}" alt="Current" style="height: 100px; object-fit: cover;" class="rounded border">
+                                    <input type="hidden" th:field="*{currentImageUrl}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <div class="text-end">
+                            <a th:href="@{/admin/vehicles}" class="btn btn-light me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary fw-bold" th:text="${vehicleDto.id == null ? 'Save Vehicle' : 'Update Vehicle'}"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

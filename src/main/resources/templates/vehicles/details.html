@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="${vehicle.brand + ' ' + vehicle.model + ' - RideEasy'}">Vehicle Details</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="mb-4">
+            <a th:href="@{/vehicles}" class="text-decoration-none text-muted"><i class="fa-solid fa-arrow-left me-1"></i> Back to Fleet</a>
+        </div>
+        
+        <div class="card shadow-sm border-0 overflow-hidden">
+            <div class="row g-0">
+                <div class="col-md-7">
+                    <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://via.placeholder.com/800x500?text=No+Image'}" class="img-fluid h-100 w-100" style="object-fit: cover; min-height: 400px;" th:alt="${vehicle.brand + ' ' + vehicle.model}">
+                </div>
+                <div class="col-md-5 d-flex flex-column">
+                    <div class="card-body p-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-primary fs-6" th:text="${vehicle.type}"></span>
+                            <span class="badge bg-success" th:if="${vehicle.status.name() == 'AVAILABLE'}"><i class="fa-solid fa-check-circle me-1"></i> Available Now</span>
+                            <span class="badge bg-secondary" th:unless="${vehicle.status.name() == 'AVAILABLE'}">Not Available</span>
+                        </div>
+                        
+                        <h1 class="card-title fw-bold display-6 mb-1" th:text="${vehicle.brand + ' ' + vehicle.model}"></h1>
+                        <p class="text-muted mb-4"><i class="fa-solid fa-hashtag me-1"></i> Reg: <span th:text="${vehicle.registrationNumber}"></span></p>
+                        
+                        <div class="bg-light p-4 rounded mb-4">
+                            <h2 class="text-success fw-bold mb-0">
+                                $<span th:text="${vehicle.pricePerDay}"></span> <span class="fs-5 text-muted fw-normal">/ day</span>
+                            </h2>
+                        </div>
+                        
+                        <p class="lead">Experience the comfort and reliability of the <span th:text="${vehicle.brand + ' ' + vehicle.model}"></span>. Perfect for your next trip, combining style, performance, and fuel efficiency.</p>
+                        
+                        <div class="mt-auto pt-4 border-top">
+                            <button class="btn btn-primary btn-lg w-100 fw-bold" th:disabled="${vehicle.status.name() != 'AVAILABLE'}">
+                                <i class="fa-solid fa-calendar-check me-2"></i> Book This Vehicle
+                            </button>
+                            <div class="text-center mt-2 small text-muted" th:if="${vehicle.status.name() != 'AVAILABLE'}">
+                                This vehicle is currently not available for booking.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

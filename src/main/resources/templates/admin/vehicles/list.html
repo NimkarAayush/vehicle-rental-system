@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{fragments/layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Manage Vehicles - Admin</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+            <h2 class="fw-bold"><i class="fa-solid fa-car me-2"></i>Manage Vehicles</h2>
+            <a th:href="@{/admin/vehicles/new}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Add Vehicle</a>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Filters -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body bg-light">
+                <form th:action="@{/admin/vehicles}" method="get" class="row g-3 align-items-center">
+                    <div class="col-md-5">
+                        <input type="text" name="search" th:value="${search}" class="form-control" placeholder="Search brand, model, or reg #">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option th:each="stat : ${statuses}" th:value="${stat}" th:text="${stat}" th:selected="${stat == statusFilter}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th><a th:href="@{/admin/vehicles(sortField='id', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">ID <i class="fa-solid fa-sort"></i></a></th>
+                            <th>Image</th>
+                            <th><a th:href="@{/admin/vehicles(sortField='brand', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">Vehicle <i class="fa-solid fa-sort"></i></a></th>
+                            <th>Reg #</th>
+                            <th><a th:href="@{/admin/vehicles(sortField='pricePerDay', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">Price/Day <i class="fa-solid fa-sort"></i></a></th>
+                            <th><a th:href="@{/admin/vehicles(sortField='status', sortDir=${reverseSortDir}, search=${search}, status=${statusFilter})}" class="text-decoration-none text-dark">Status <i class="fa-solid fa-sort"></i></a></th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="vehicle : ${vehiclePage.content}">
+                            <td th:text="${vehicle.id}"></td>
+                            <td>
+                                <img th:src="${vehicle.imageUrl != null ? vehicle.imageUrl : 'https://via.placeholder.com/150x100?text=No+Image'}" alt="Vehicle" style="width: 60px; height: 40px; object-fit: cover;" class="rounded">
+                            </td>
+                            <td>
+                                <div class="fw-bold" th:text="${vehicle.brand + ' ' + vehicle.model}"></div>
+                                <small class="text-muted" th:text="${vehicle.type}"></small>
+                            </td>
+                            <td th:text="${vehicle.registrationNumber}"></td>
+                            <td th:text="${'$' + vehicle.pricePerDay}"></td>
+                            <td>
+                                <span class="badge" th:classappend="${vehicle.status.name() == 'AVAILABLE' ? 'bg-success' : (vehicle.status.name() == 'RENTED' ? 'bg-primary' : 'bg-warning')}" th:text="${vehicle.status}"></span>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Status
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <form th:action="@{/admin/vehicles/status/{id}(id=${vehicle.id})}" method="post">
+                                                <input type="hidden" name="status" value="AVAILABLE">
+                                                <button type="submit" class="dropdown-item">Mark Available</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form th:action="@{/admin/vehicles/status/{id}(id=${vehicle.id})}" method="post">
+                                                <input type="hidden" name="status" value="RENTED">
+                                                <button type="submit" class="dropdown-item">Mark Rented</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form th:action="@{/admin/vehicles/status/{id}(id=${vehicle.id})}" method="post">
+                                                <input type="hidden" name="status" value="MAINTENANCE">
+                                                <button type="submit" class="dropdown-item">Mark Maintenance</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a th:href="@{/admin/vehicles/edit/{id}(id=${vehicle.id})}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+                                <a th:href="@{/admin/vehicles/delete/{id}(id=${vehicle.id})}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(vehiclePage.content)}">
+                            <td colspan="7" class="text-center py-4 text-muted">No vehicles found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="card-footer bg-white py-3" th:if="${vehiclePage.totalPages > 1}">
+                <nav>
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item" th:classappend="${vehiclePage.first ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/vehicles(page=${vehiclePage.number - 1}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, vehiclePage.totalPages - 1)}" th:classappend="${i == vehiclePage.number ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/admin/vehicles(page=${i}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${vehiclePage.last ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/vehicles(page=${vehiclePage.number + 1}, search=${search}, status=${statusFilter}, sortField=${sortField}, sortDir=${sortDir})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
